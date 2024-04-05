@@ -27,8 +27,8 @@ client.connect((err) => {
 
 //Skapa tabell
 client.query(`
-    DROP TABLE IF EXISTS courses;
-    CREATE TABLE workexperience(
+    DROP TABLE IF EXISTS workexperiences;
+    CREATE TABLE workexperiences(
         id SERIAL PRIMARY KEY,
         companyname VARCHAR(255),
         jobtitle VARCHAR(64),
@@ -37,11 +37,11 @@ client.query(`
         enddate DATE,
         description TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-`, (err, res) => {
-    if (err) {
-        console.error("Fel vid skapande av tabell:", err.stack);
-    } else {
-        console.log("Tabellen skapad");
-    }
+    )`, 
+    (err, res) => {
+        if (err) {
+            console.error("Fel vid skapande av tabell:", err.message);
+        } else {
+            console.log("Tabellen skapad");
+        }
 });
