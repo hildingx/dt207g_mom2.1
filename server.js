@@ -36,6 +36,11 @@ client.connect((err) => {
     }
 });
 
+//Grundrutt för att visa välkomsmeddelande
+app.get('/', (req, res) => {
+    res.send('Välkommen till Alex CV-API!');
+});
+
 //Get - Hämta data från databas
 app.get('/api/workexperiences', async (req, res) => {
     try {
