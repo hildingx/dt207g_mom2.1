@@ -56,6 +56,7 @@ app.get('/api/workexperiences', async (req, res) => {
 
 //Post - Infoga ny data i databas
 app.post('/api/workexperiences', async (req, res) => {
+    //Hämta egenskaper från objekt under bodyn
     const { companyname, jobtitle, location, startdate, enddate, description } = req.body;
 
     //Validera input så fält inte är tomma
@@ -78,9 +79,36 @@ app.post('/api/workexperiences', async (req, res) => {
     }
 });
 
-//PUT
-app.put('/api/workexperiences/:id', (req, res) => {
-    res.json({ message: 'Arbetserfarenheten uppdaterad med id ' + req.params.id });
+//PUT - Uppdatera befintlig data i databas
+app.put('/api/workexperiences/:id', async (req, res) => {
+     //Hämta specifikt id
+    const id = req.params.id;
+    const { companyname, jobtitle, location, startdate, enddate, description } = req.body;
+
+    // Kontrollera att inga fält är tomma
+    if (!companyname.trim() || !jobtitle.trim() || !location.trim() || !startdate.trim() || !enddate.trim() || !description.trim()) {
+        return res.status(400).json({ error: 'Alla fält måste vara ifyllda.' });
+    }
+
+    try {
+        //Uppdatera arbetserfarenheten i databasen med nya värden
+        const result = await client.query(
+            'UPDATE workexperiences SET companyname = $1, jobtitle = $2, location = $3, startdate = $4, enddate = $5, description = $6 WHERE id = $7 RETURNING *',
+            [companyname, jobtitle, location, startdate, enddate, description, id]
+        );
+
+        //Kontrollera om uppdateringen påverkade någon rad
+        if (result.rowCount === 0) {
+            //Om ingen rad påverkas
+            return res.status(404).json({ message: 'Ingen arbetserfarenhet hittades med det angivna ID:t.' });
+        }
+
+        //Svara med den uppdaterade arbetserfarenheten
+        res.json({ message: 'Arbetserfarenheten uppdaterad med id ' + id, data: result.rows[0] });
+    } catch (err) {
+        console.error('Fel vid ändring av post i databasen:', err.message);
+        res.status(500).json({ error: 'Ett fel uppstod vid ändring av arbetserfarenheten.' });
+    }
 });
 
 //DELETE
