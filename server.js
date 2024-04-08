@@ -87,12 +87,10 @@ app.delete('/api/workexperiences/:id', async (req, res) => {
     try {
         const result = await client.query('DELETE FROM workexperiences WHERE id = $1', [id]);
         
-        // Kontrollera om någon rad deletades
+        //Kontrollera om någon rad deletades
         if (result.rowCount === 0) {
             return res.status(404).json({ message: 'Ingen post hittades med det angivna ID:t. Ingen post togs bort.' });
         }
-
-        // En eller flera rader togs bort
         res.status(200).json({ message: 'Posten har tagits bort.' });
     } catch (err) {
         console.error('Fel vid borttagning från databasen:', err.message);
@@ -103,6 +101,7 @@ app.delete('/api/workexperiences/:id', async (req, res) => {
 // Definiera porten, använd miljövariabeln PORT eller standardvärdet 3000
 const port = process.env.PORT || 3000;
 
+//Starta express-server
 app.listen(port, () => {
     console.log('Server is running on port: ' + port);
 });
