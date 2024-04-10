@@ -45,7 +45,7 @@ app.get('/', (req, res) => {
 app.get('/api/workexperiences', async (req, res) => {
     try {
         //Utför en SQL-fråga för att hämta alla arbetserfarenheter
-        const result = await client.query('SELECT * FROM workexperiences;');
+        const result = await client.query('SELECT * FROM workexperiences ORDER BY startdate DESC;');
         //Skicka tillbaka resultaten som JSON
         return res.json(result.rows);
     } catch (err) {
